@@ -3,6 +3,7 @@ import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "@/features/auth/pages/RegisterPage";
 import ForgotPasswordPage from "@/features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage";
+import DashboardPage from "@/features/dashboard/pages/DashboardPage";
 
 const AppRouter = () => {
   return (
@@ -10,6 +11,7 @@ const AppRouter = () => {
       <Routes>
         {/* default route */}
         <Route path="/" element={<Navigate to='/login' replace />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
 
         {/* Authentication */}
         <Route path="/login" element={<LoginPage />} />
