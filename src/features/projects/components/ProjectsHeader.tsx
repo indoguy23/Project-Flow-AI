@@ -1,6 +1,12 @@
 import { Plus } from "lucide-react";
 
-const ProjectsHeader = () => {
+interface ProjectsHeaderProps {
+    onCreateProject: () => void;
+}
+
+const ProjectsHeader = ({
+    onCreateProject,
+}: ProjectsHeaderProps) => {
     return (
         <div className="mb-8 flex items-center justify-between">
 
@@ -11,13 +17,15 @@ const ProjectsHeader = () => {
                 </h1>
 
                 <p className="mt-2 text-slate-500">
-                    Manage and organize all your projects in one place.
+                    Organize and manage your projects.
                 </p>
 
             </div>
 
-            <button className="flex items-center gap-2 rounded-xl bg-cyan-600 px-5 py-3 font-semibold text-white transition hover:bg-cyan-700">
-
+            <button
+                onClick={onCreateProject}
+                className="flex items-center gap-2 rounded-xl bg-cyan-600 px-5 py-3 font-semibold text-white transition hover:bg-cyan-700"
+            >
                 <Plus size={18} />
 
                 New Project
