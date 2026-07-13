@@ -12,23 +12,28 @@ export interface ProjectFormData {
 }
 
 interface ProjectFormProps {
+  initialValues?: ProjectFormData;
+  submitText?: string;
   onCancel: () => void;
   onSubmit: (data: ProjectFormData) => void;
 }
 
 const ProjectForm = ({
+  initialValues,
+  submitText,
   onCancel,
   onSubmit,
 }: ProjectFormProps) => {
 
-  const [form, setForm] = useState<ProjectFormData>({
-    name: "",
-    description: "",
-    priority: "Medium",
-    status: "Pending",
-    dueDate: "",
-    team: "",
-  });
+  const [form, setForm] = useState<ProjectFormData>(
+    initialValues ?? {
+      name: "",
+      description: "",
+      priority: "Medium",
+      status: "Pending",
+      dueDate: "",
+      team: "",
+    });
 
   const handleChange = (
     key: keyof ProjectFormData,
@@ -139,7 +144,7 @@ const ProjectForm = ({
         </Button>
 
         <Button type="submit">
-          Create Project
+          {submitText}
         </Button>
 
       </div>

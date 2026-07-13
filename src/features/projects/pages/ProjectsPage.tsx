@@ -1,61 +1,35 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import DashboardLayout from "@/features/dashboard/layouts/DashboardLayout";
-import { projects as initialProjects } from "@/constants/projects/projects";
+import ConfirmDialog from "@/components/ui/ConfirmDialog/ConfirmDialog";
 
 import ProjectsHeader from "../components/ProjectsHeader";
 import ProjectFilters from "../components/ProjectFilters";
 import ProjectsGrid from "../components/ProjectsGrid";
 import CreateProjectModal from "../components/CreateProjectModal";
 
-import type { Project } from "../types/project";
-import type { ProjectFormData } from "../components/ProjectForm";
+import useProjects from "../hooks/useProjects";
 
 const ProjectsPage = () => {
-  const [projectList, setProjectList] = useState<Project[]>(initialProjects);
 
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [priority, setPriority] = useState("");
+  const {
+    filteredProjects,
+
+    search,
+    status,
+    priority,
+
+    setSearch,
+    setStatus,
+    setPriority,
+
+    createProject,
+    deleteProject,
+  } = useProjects();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCreateProject = (data: ProjectFormData) => {
-    const newProject: Project = {
-      id: Date.now(),
-      name: data.name,
-      description: data.description,
-      priority: data.priority,
-      status: data.status,
-      dueDate: data.dueDate,
-      team: data.team,
-      progress: 0,
-    };
-
-    setProjectList((prev) => [newProject, ...prev]);
-
-    setIsModalOpen(false);
-  };
-
-  const filteredProjects = useMemo(() => {
-    return projectList.filter((project) => {
-      const matchesSearch = project.name
-        .toLowerCase()
-        .includes(search.toLowerCase());
-
-      const matchesStatus =
-        status === "" || project.status === status;
-
-      const matchesPriority =
-        priority === "" || project.priority === priority;
-
-      return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesPriority
-      );
-    });
-  }, [projectList, search, status, priority]);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   return (
     <DashboardLayout>
@@ -75,12 +49,30 @@ const ProjectsPage = () => {
 
       <ProjectsGrid
         projects={filteredProjects}
+        onEdit={(project) => console.log(project)}
+        onDelete={setDeleteId}
       />
 
       <CreateProjectModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onCreate={handleCreateProject}
+        onCreate={(data) => {
+          createProject(data);
+          setIsModalOpen(false);
+        }}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteId !== null}
+        title="Delete Project"
+        message="Are you sure you want to delete this project?"
+        onCancel={() => setDeleteId(null)}
+        onConfirm={() => {
+          if (deleteId !== null) {
+            deleteProject(deleteId);
+            setDeleteId(null);
+          }
+        }}
       />
 
     </DashboardLayout>

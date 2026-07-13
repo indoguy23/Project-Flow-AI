@@ -7,6 +7,7 @@ import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage";
 
 import DashboardPage from "@/features/dashboard/pages/DashboardPage";
 import ProjectsPage from "@/features/projects/pages/ProjectsPage";
+import ProjectDetailsPage from "@/features/projects/pages/ProjectDetailsPage";
 
 const AppRouter = () => {
   return (
@@ -25,6 +26,12 @@ const AppRouter = () => {
 
       {/* Projects */}
       <Route path="/projects" element={<ProjectsPage />} />
+
+      {/* Project Detail Page */}
+      <Route
+        path="/projects/:id"
+        element={<ProjectDetailsPage />}
+      />
 
       {/* 404 */}
       <Route path="*" element={<Navigate to="/login" replace />} />

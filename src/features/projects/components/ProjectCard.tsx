@@ -3,11 +3,16 @@ import {
   MoreVertical,
   Users,
 } from "lucide-react";
+import { useState } from "react";
+import ProjectActions from "./ProjectActions";
 
 import type { Project } from "../types/project";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectCardProps {
   project: Project;
+  onEdit: (Project: Project) => void;
+  onDelete: (id: number) => void;
 }
 
 const statusColor = {
@@ -22,9 +27,14 @@ const priorityColor = {
   Low: "bg-green-100 text-green-700",
 };
 
-const ProjectCard = ({ project }: ProjectCardProps) => {
+const ProjectCard = ({ project, onEdit, onDelete }: ProjectCardProps) => {
+
+  const [showMenu, setShowMenu] = useState(false);
+
+  const navigate = useNavigate();
+
   return (
-    <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <div className="group relative overflow-visible rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
       {/* Header */}
 
@@ -42,80 +52,33 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
 
         </div>
 
-        <button className="rounded-lg p-2 transition hover:bg-slate-100">
+        {/* Action Menu */}
 
-          <MoreVertical size={18} />
+        <div className="relative flex-shrink-0">
 
-        </button>
-
-      </div>
-
-      {/* Progress */}
-
-      <div className="mt-6">
-
-        <div className="mb-2 flex justify-between text-sm">
-
-          <span className="text-slate-500">
-            Progress
-          </span>
-
-          <span className="font-medium">
-            {project.progress}%
-          </span>
-
-        </div>
-
-        <div className="h-2 rounded-full bg-slate-200">
-
-          <div
-            className="h-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600"
-            style={{ width: `${project.progress}%` }}
-          />
-
-        </div>
-
-      </div>
-
-      {/* Footer */}
-
-      <div className="mt-6 flex items-center justify-between">
-
-        <div className="space-y-2">
-
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-
-            <Users size={16} />
-
-            {project.team}
-
-          </div>
-
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-
-            <CalendarDays size={16} />
-
-            Due {project.dueDate}
-
-          </div>
-
-        </div>
-
-        <div className="space-y-2 text-right">
-
-          <span
-            className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${statusColor[project.status]}`}
+          <button
+            onClick={() => setShowMenu((prev) => !prev)}
+            className="rounded-lg p-2 transition hover:bg-slate-100"
           >
-            {project.status}
-          </span>
+            <MoreVertical size={18} />
+          </button>
 
-          <br />
-
-          <span
-            className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${priorityColor[project.priority]}`}
-          >
-            {project.priority}
-          </span>
+          {showMenu && (
+            <ProjectActions
+              onView={() => {
+                navigate(`/projects/${project.id}`);
+                setShowMenu(false);
+              }}
+              onEdit={() => {
+                onEdit(project)
+                setShowMenu(false);
+              }}
+              onDelete={() => {
+                onDelete(project.id);
+                setShowMenu(false)
+              }}
+            />
+          )}
 
         </div>
 
